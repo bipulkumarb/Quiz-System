@@ -1,0 +1,265 @@
+SOURCE CODE:
+
+#include<fstream.h>
+#include<conio.h>
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<dos.h>
+char sdate[11];
+
+class question
+{
+public:
+char q[500];
+char a[20],b[20],c[20];
+int ans;
+void add()
+{
+cout<<"\nEnter question:"; gets(q);
+cout<<"Enter answers:\n";
+cout<<"Answer 1:"; gets(a);
+cout<<"Answer 2:"; gets(b);
+cout<<"Answer 3:"; gets(c);
+cout<<"\nEnter Answer(1/2/3):";
+cin>>ans;
+}
+void show()
+{
+cout<<q<<"\n\n";
+cout<<" 1. "<<a<<endl;
+cout<<" 2. "<<b<<endl;
+cout<<" 3. "<<c<<endl;
+}
+};
+question qt;
+void main_menu();
+int sub_menu();
+void addq();
+void play();
+void output();
+void input();
+void frontmenu();
+void showdate();
+
+///////////////////////////MAIN()////////////////////////////////////////
+void main()
+{
+clrscr();
+frontmenu();
+main_menu();
+//output();
+//input();
+//getch();
+}
+
+////////////////////////////MAIN_MENU()///////////////////////////////
+void main_menu()
+{
+clrscr();
+int opt;
+cout<<"\n\n\t\t\t    COMPTER QUIZ\n";
+cout<<"Options\n----------------------------\n";
+cout<<"1. Play\n";
+cout<<"2. Add Questions\n";
+cout<<"\n----------------------------\n";
+cout<<"Enter your option(1/2):";
+//cin>>opt;
+UP:
+opt=(int)getche();
+if(opt==49) 			//1
+play();
+else if(opt==50) 	//2
+addq();
+else if(opt==48)	//ESC
+exit(0);
+else if(opt==13) //ENTER
+goto UP;
+}
+/////////////////////////////SUB_MENU()///////////////////////////////
+int sub_menu()
+{
+int opt;
+cout<<"SELECT CATEGORIES\n";
+cout<<"\n----------------------------\n";
+cout<<"1. Computer\n";
+cout<<"2. Mathematics\n";
+cout<<"3. Science\n";
+cout<<"4. General Knowledge\n";
+cout<<"BACK (0)\tEXIT(ESC)\n";
+cout<<"\n----------------------------\n";
+cout<<"Enter options(1/2/3/4):";
+//cin>>opt;
+return (int)getche();
+}
+///////////////////////////////////PLAY()/////////////////////////
+void play()
+{
+int opt,ans;
+ifstream ifs;
+UP:
+clrscr();
+cout<<"PLAY : ";
+opt=sub_menu();
+if(opt==49)								//1
+ifs.open("c:\\comp.dat");
+else if(opt==50) 					//2
+ifs.open("c:\\maths.dat");
+else if(opt==51) 					// 3
+ifs.open("c:\\science.dat");
+else if(opt==52) 					//4
+ifs.open("c:\\general.dat");
+else if(opt==48)
+{
+main_menu();  goto end;
+}
+else if(opt==27) 					//ESC
+	exit(0);
+else
+goto UP;//	cout<<"Invalid option";
+
+if(ifs.fail())
+{
+	cout<<"File opening error";
+	getch();
+}
+else
+{
+int i=1,c=0,w=0;
+ifs.read((char *)&qt,sizeof(qt));
+
+while(!ifs.eof())
+{ cout<<"\n("<<i<<") ";
+	qt.show();
+	cout<<"Enter your answer(1/2/3):"; cin>>ans;
+	if(qt.ans==ans)
+	{
+		cout<<"Correct";
+		c++;
+	}
+	else
+	{
+	cout<<"Incorrect";
+	w++;
+	}
+	getch();
+	cout<<"\n----------------------------\n";
+	ifs.read((char *)&qt,sizeof(qt));
+	i++;
+} // while
+ifs.close();
+clrscr();
+cout<<"\nQuestion Attempted : "<<i-1;
+cout<<"\nCoreect Answers : "<<c;
+cout<<"\nWrong Answers : "<<w;
+getch();
+}
+end:
+}
+//////////////////////////////////ADDQ()///////////////////////////
+void addq()
+{
+int opt;
+ofstream ofs;
+UP:
+clrscr();
+cout<<"ADD QUESTIONS : ";
+opt=sub_menu();
+if(opt==49)								//1
+ofs.open("c:\\comp.dat",ios::app);
+else if(opt==50) 					//2
+ofs.open("c:\\maths.dat",ios::app);
+else if(opt==51) 					// 3
+ofs.open("c:\\science.dat",ios::app);
+else if(opt==52) 					//4
+ofs.open("c:\\general.dat",ios::app);
+else if(opt==27)	//ESC
+exit(0);
+else if(opt==48)  //0
+{
+main_menu();  goto end;
+}
+else //if(opt==13) //ENTER
+goto UP;
+
+if(ofs.fail())
+	cout<<":::File opening error";
+else
+{
+char ch='y';
+while(ch=='y'||ch=='Y')
+{
+qt.add();
+ofs.write((char *)&qt,sizeof(qt));
+cout<<"Add more (y/n) : "; cin>>ch;
+}
+ofs.close();
+}
+end:
+}
+//////////////////////////////////////OUTPUT()////////////////////////////
+void output()
+{
+question qtt;
+ofstream ofs;
+ofs.open("c:\\comp.dat",ios::app);
+qtt.add();
+ofs.write((char *)&qtt,sizeof(qtt));
+ofs.close();
+}
+////////////////////////////////IOPUT()////////////////////////////////
+void input()
+{
+question qt;
+ifstream ifs;
+ifs.open("c:\\comp.dat");
+if(!ifs)
+cout<<"Error"<<endl;
+else
+{
+ifs.read((char *)&qt,sizeof(qt));
+
+while(!ifs.eof())
+{
+qt.show();
+ifs.read((char *)&qt,sizeof(qt));
+}
+ifs.close();
+}
+}
+/////////////////////////////////FRONTMENU()/////////////////////
+void frontmenu()
+{
+	//clrscr();
+	showdate();
+	cout<<"--------------------------------------------------------------------------------\n\n";
+	cout<<"\t\t     Welcome to Computer Quiz Project"<<"\n\n\t\t\t    << "<<sdate<<" >>";
+	cout<<"\n\n-------------------------------------------------------------------------------\n\n";
+	cout<<"\n\n\t\t\t      Developed by";
+	cout<<"\n\n\t\t\t\tA Kumar\n\t\t\t\tB Kumar\n\t\t\t\tC Kumar\n\t\t\t\tD Kumar";
+	cout<<"\n\n\n\n\n\n\t\t       Press any key to continue...";
+	getch();
+}
+///////////////////////////SHOWDATE()///////////////////////////
+void showdate()
+{
+struct date d;
+getdate(&d);
+char sd[3],sm[3],sy[5],ss[2]="/";//,sdate[11]="";
+int dd,mm,yy;
+dd=(int)d.da_day;
+mm=(int)d.da_mon;
+yy=(int)d.da_year;
+itoa(dd,sd,10);itoa(mm,sm,10);itoa(yy,sy,10);
+strcat(sdate,sd);
+strcat(sdate,ss);
+strcat(sdate,sm);
+strcat(sdate,ss);
+strcat(sdate,sy);
+}
+
+
+
+
+
+/********************end***************************
